@@ -5,10 +5,12 @@ import { IoMdEyeOff } from "react-icons/io";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
+import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 
 import { loginFormSchema } from "../utils/formValidationSchema";
 import { loginMutation } from "../services/auth.service";
 import { useNotification } from "../hooks/useNotification";
+import { auth } from "../config/firebaseConfig";
 
 export default function LoginForm() {
   const [passwordType, setPasswordType] = useState(false);
@@ -41,6 +43,31 @@ export default function LoginForm() {
 
   if(data?.success === false && data?.statusCode === 401 && data?.message?.includes("Wrong password")) {
     notifyError(data?.message);
+  }
+
+  const signInWithGoogleHandler = async () => {
+    try {
+      const result = await signInWithPopup(auth, new GoogleAuthProvider());
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+      if(!credential) {
+        console.log("Error in credential");
+        return
+      }
+      const token = credential.accessToken;
+      const user = result.user;
+      console.log(user)
+
+    } catch(error) {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      const email = error.customData.email;
+      const credential = GoogleAuthProvider.credentialFromError(error);
+
+      console.log("errorCode", errorCode)
+      console.log("errorMessage", errorMessage)
+      console.log("email", email)
+      console.log("credential", credential)
+    }
   }
 
   return (
@@ -108,7 +135,11 @@ export default function LoginForm() {
       </div>
 
       <div className="flex items-center mt-6 -mx-2">
-        <button type="button" className="flex items-center justify-center w-full px-6 py-2.5 mx-2 text-sm font-medium text-white transition-colors duration-300 transform bg-gray-800 rounded-lg hover:bg-gray-700 focus:outline-none focus:ring focus:ring-gray-300 focus:ring-opacity-50">
+        <button
+          type="button"
+          className="flex items-center justify-center w-full px-6 py-2.5 mx-2 text-sm font-medium text-white transition-colors duration-300 transform bg-gray-800 rounded-lg hover:bg-gray-700 focus:outline-none focus:ring focus:ring-gray-300 focus:ring-opacity-50"
+          onClick={signInWithGoogleHandler}
+        >
           <svg className="w-4 h-4 mx-2 fill-current" viewBox="0 0 24 24">
             <path d="M12.24 10.285V14.4h6.806c-.275 1.765-2.056 5.174-6.806 5.174-4.095 0-7.439-3.389-7.439-7.574s3.345-7.574 7.439-7.574c2.33 0 3.891.989 4.785 1.849l3.254-3.138C18.189 1.186 15.479 0 12.24 0c-6.635 0-12 5.365-12 12s5.365 12 12 12c6.926 0 11.52-4.869 11.52-11.726 0-.788-.085-1.39-.189-1.989H12.24z">
             </path>
