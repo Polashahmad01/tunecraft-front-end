@@ -1,11 +1,13 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { IoMdEye } from "react-icons/io";
 import { IoMdEyeOff } from "react-icons/io";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { useMutation } from "@tanstack/react-query";
 
 import { loginFormSchema } from "../utils/formValidationSchema";
+import { loginMutation } from "../services/auth.service";
 
 export default function LoginForm() {
   const [passwordType, setPasswordType] = useState(false);
@@ -13,13 +15,21 @@ export default function LoginForm() {
     resolver: zodResolver(loginFormSchema),
     mode: "onTouched"
   })
+  const { mutate, data, isSuccess, isPending } = useMutation({
+    mutationFn: loginMutation
+  })
+  const navigate = useNavigate();
 
   const togglePasswordType = () => {
     setPasswordType(passwordType ? false : true);
   }
 
-  const onSubmitHandler = data => {
-
+  const onSubmitHandler = formData => {
+    mutate(formData);
+  }
+  
+  if(isSuccess) {
+    navigate("/");
   }
 
   return (
@@ -28,15 +38,37 @@ export default function LoginForm() {
 
       <form className="mt-6" onSubmit={handleSubmit(onSubmitHandler)}>
         <div>
-          <label htmlFor="username" className="block text-sm text-gray-800 dark:text-gray-200">Email</label>
-          <input {...register("email")} type="text" className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border rounded-lg dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40" />
+          <label
+            htmlFor="email"
+            className="block text-sm text-gray-800 dark:text-gray-200"
+          >
+            Email
+          </label>
+          <input
+            autoComplete="email"
+            id="email" {...register("email")} 
+            type="text" 
+            className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border rounded-lg dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+            placeholder="john.doe@gmail.com"
+          />
           {errors.email && <p className="text-xs text-red-500 mt-1">{errors.email.message}</p>}
         </div>
 
         <div className="mt-4">
-          <label htmlFor="password" className="block text-sm text-gray-800 dark:text-gray-200">Password</label>
+          <label
+            htmlFor="password" 
+            className="block text-sm text-gray-800 dark:text-gray-200"
+          >
+            Password
+          </label>
           <div className="relative">
-            <input {...register("password")} type={passwordType ? "text" : "password"} className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border rounded-lg dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40" />
+            <input
+              autoComplete="current-password"
+              id="password" {...register("password")}
+              type={passwordType ? "text" : "password"}
+              className="block w-full px-4 py-2 mt-2 text-gray-700 bg-white border rounded-lg dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600 focus:border-blue-400 dark:focus:border-blue-300 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+              placeholder="******"
+            />
             <div onClick={togglePasswordType} className=" absolute right-[12px] top-[15px]">
               {passwordType === true && <IoMdEye />}
               {passwordType === false && <IoMdEyeOff />}
@@ -51,7 +83,7 @@ export default function LoginForm() {
 
         <div className="mt-6">
           <button className="w-full px-6 py-2.5 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-gray-800 rounded-lg hover:bg-gray-700 focus:outline-none focus:ring focus:ring-gray-300 focus:ring-opacity-50">
-            Login
+            {isPending ? "Please wait..." : "Login"}
           </button>
         </div>
       </form>
