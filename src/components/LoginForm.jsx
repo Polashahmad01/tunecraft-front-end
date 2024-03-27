@@ -8,6 +8,7 @@ import { useMutation } from "@tanstack/react-query";
 
 import { loginFormSchema } from "../utils/formValidationSchema";
 import { loginMutation } from "../services/auth.service";
+import { useNotification } from "../hooks/useNotification";
 
 export default function LoginForm() {
   const [passwordType, setPasswordType] = useState(false);
@@ -15,10 +16,11 @@ export default function LoginForm() {
     resolver: zodResolver(loginFormSchema),
     mode: "onTouched"
   })
-  const { mutate, data, isSuccess, isPending } = useMutation({
+  const { mutate, data, isPending } = useMutation({
     mutationFn: loginMutation
   })
   const navigate = useNavigate();
+  const { notifySuccess, notifyError } = useNotification();
 
   const togglePasswordType = () => {
     setPasswordType(passwordType ? false : true);
@@ -28,8 +30,17 @@ export default function LoginForm() {
     mutate(formData);
   }
   
-  if(isSuccess) {
+  if(data?.success === true && data?.statusCode === 200 && data?.message === "User successfully logged in.") {
+    notifySuccess(data?.message);
     navigate("/");
+  }
+
+  if(data?.success === false && data?.statusCode === 401 && data?.message?.includes("A user with")) {
+    notifyError(data?.message);
+  }
+
+  if(data?.success === false && data?.statusCode === 401 && data?.message?.includes("Wrong password")) {
+    notifyError(data?.message);
   }
 
   return (
