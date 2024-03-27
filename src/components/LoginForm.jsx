@@ -8,7 +8,7 @@ import { useMutation } from "@tanstack/react-query";
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 
 import { loginFormSchema } from "../utils/formValidationSchema";
-import { loginMutation } from "../services/auth.service";
+import { loginMutation, socialLoginMutation } from "../services/auth.service";
 import { useNotification } from "../hooks/useNotification";
 import { auth } from "../config/firebaseConfig";
 
@@ -23,6 +23,9 @@ export default function LoginForm() {
   })
   const navigate = useNavigate();
   const { notifySuccess, notifyError } = useNotification();
+  const { mutate: socialLoginMutate, data: socialLoginResultData, isPending: socialLoginIsPending } = useMutation({
+    mutationFn: socialLoginMutation
+  })
 
   const togglePasswordType = () => {
     setPasswordType(passwordType ? false : true);
@@ -53,21 +56,28 @@ export default function LoginForm() {
         console.log("Error in credential");
         return
       }
-      const token = credential.accessToken;
-      const user = result.user;
-      console.log(user)
+      
+      // const token = credential.accessToken;
+      const user = {
+        fullName: result.user.displayName,
+        email: result.user.email,
+        emailVerified: result.user.emailVerified,
+        profilePicture: result.user.photoURL
+      };
+
+      socialLoginMutate(user);
 
     } catch(error) {
       const errorCode = error.code;
       const errorMessage = error.message;
       const email = error.customData.email;
       const credential = GoogleAuthProvider.credentialFromError(error);
-
-      console.log("errorCode", errorCode)
-      console.log("errorMessage", errorMessage)
-      console.log("email", email)
-      console.log("credential", credential)
     }
+  }
+
+  if(socialLoginResultData?.success && socialLoginResultData.statusCode === 200) {
+    notifySuccess(socialLoginResultData?.message);
+    navigate("/");
   }
 
   return (
@@ -144,7 +154,7 @@ export default function LoginForm() {
             <path d="M12.24 10.285V14.4h6.806c-.275 1.765-2.056 5.174-6.806 5.174-4.095 0-7.439-3.389-7.439-7.574s3.345-7.574 7.439-7.574c2.33 0 3.891.989 4.785 1.849l3.254-3.138C18.189 1.186 15.479 0 12.24 0c-6.635 0-12 5.365-12 12s5.365 12 12 12c6.926 0 11.52-4.869 11.52-11.726 0-.788-.085-1.39-.189-1.989H12.24z">
             </path>
           </svg>
-          <span className="hidden mx-2 sm:inline">Continue with Google</span>
+          <span className="hidden mx-2 sm:inline">{socialLoginIsPending ? "Please wait..." : "Continue with Google"}</span>
         </button>
       </div>
       <p className="mt-8 text-sm font-light text-center text-gray-700">
