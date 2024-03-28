@@ -35,3 +35,15 @@ export const forgotPasswordMutation = async (data) => {
 
   return await response.json();
 }
+
+export const resetPasswordMutation = async (data) => {
+  const response = await makeApiRequest(`/api/v1/reset-password/${data.tokenId}`, {
+    headers: {
+      "Content-type": "application/json"
+    },
+    method: "POST",
+    body: JSON.stringify(data)
+  });
+
+  return await response.json();
+}
