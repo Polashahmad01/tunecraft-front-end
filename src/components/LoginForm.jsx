@@ -82,7 +82,7 @@ export default function LoginForm() {
 
   if(socialLoginResultData?.success && socialLoginResultData.statusCode === 200) {
     notifySuccess(socialLoginResultData?.message);
-    // navigate("/");
+    navigate("/");
   }
 
   return (
