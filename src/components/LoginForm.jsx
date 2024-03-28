@@ -131,11 +131,11 @@ export default function LoginForm() {
         </div>
 
         <div className="text-right">
-          <Link to="/auth/forgot-password" className="text-xs text-right text-gray-600 dark:text-gray-400 hover:underline">Forget Password?</Link>
+          <Link to="/auth/forgot-password" className="text-xs text-right text-gray-600 dark:text-gray-300 hover:underline">Forget Password?</Link>
         </div>
 
         <div className="mt-6">
-          <button className="w-full px-6 py-2.5 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-gray-800 rounded-lg hover:bg-gray-700 focus:outline-none focus:ring focus:ring-gray-300 focus:ring-opacity-50">
+          <button className="w-full px-6 py-2.5 text-sm font-medium tracking-wide text-white capitalize transition-colors duration-300 transform bg-gray-800 rounded-lg hover:bg-gray-700 focus:outline-none focus:ring focus:ring-gray-300 focus:ring-opacity-50 dark:bg-black">
             {!isPending && "Login"}
             {isPending && <svg aria-hidden="true" role="status" className="inline w-4 h-4 me-3 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="#E5E7EB"/>
@@ -156,7 +156,7 @@ export default function LoginForm() {
       <div className="flex items-center mt-6 -mx-2">
         <button
           type="button"
-          className="flex items-center justify-center w-full px-6 py-2.5 mx-2 text-sm font-medium text-white transition-colors duration-300 transform bg-gray-800 rounded-lg hover:bg-gray-700 focus:outline-none focus:ring focus:ring-gray-300 focus:ring-opacity-50"
+          className="flex items-center justify-center w-full px-6 py-2.5 mx-2 text-sm font-medium text-white transition-colors duration-300 transform bg-gray-800 rounded-lg hover:bg-gray-700 focus:outline-none focus:ring focus:ring-gray-300 focus:ring-opacity-50 dark:bg-black"
           onClick={signInWithGoogleHandler}
         >
           {!isSignInWithGoogleLoading && <svg className="hidden sm:inline w-4 h-4 mx-2 fill-current" viewBox="0 0 24 24">
@@ -170,7 +170,7 @@ export default function LoginForm() {
           </svg>}
         </button>
       </div>
-      <p className="mt-8 text-sm font-light text-center text-gray-700">
+      <p className="mt-8 text-sm font-light text-center text-gray-700 dark:text-gray-300">
         Don't have an account? <Link to="/auth/register" className="font-medium text-gray-700 dark:text-gray-200 hover:underline">Register Now</Link>
       </p>
     </div>

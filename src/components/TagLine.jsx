@@ -9,7 +9,7 @@ export default function TagLine() {
   }
 
   return (
-    <div className="bg-[#0A0A0A]/75 dark:bg-black text-white grid grid-rows-1 place-items-center h-full px-4">
+    <div className="bg-[#0A0A0A]/75 dark:bg-[#1F2937] text-white grid grid-rows-1 place-items-center h-full px-4">
       <div className="text-center lg:text-left">
         <h1 className="text-2xl font-semibold sm:mb-4 text-white dark:text-white md:text-4xl">Create Awesome</h1>
         <h1 className="text-2xl font-semibold mb-2 sm:mb-4 text-white dark:text-white md:text-4xl">
