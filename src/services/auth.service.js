@@ -23,3 +23,15 @@ export const socialLoginMutation = async (googleUserData) => {
 
   return await response.json();
 }
+
+export const forgotPasswordMutation = async (data) => {
+  const response = await makeApiRequest("/api/v1/forgot-password", {
+    headers: {
+      "Content-type": "application/json"
+    },
+    method: "POST",
+    body: JSON.stringify(data)
+  });
+
+  return await response.json();
+}
