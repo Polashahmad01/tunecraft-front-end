@@ -88,7 +88,7 @@ export default function RegisterForm() {
   }
 
   return (
-    <div className="mx-4 max-w-sm p-6 m-auto sm:w-full sm:mx-0 bg-white rounded-lg shadow-md border dark:bg-gray-800">
+    <div className="mx-4 my-4 max-w-sm p-6 m-auto sm:w-full sm:mx-0 lg:my-0 bg-white rounded-lg shadow-md border dark:bg-gray-800">
       <h1 className="mt-3 text-xl font-semibold text-gray-800 dark:text-white md:text-2xl">Register your account</h1>
 
       <form className="mt-6" onSubmit={handleSubmit(onSubmitHandler)}>
