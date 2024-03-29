@@ -24,4 +24,22 @@ export const resetPasswordFormSchema = z.object({
 }).refine((data) => data.password === data.confirmPassword, {
   message: "Passwords do not match",
   path: ["confirmPassword"]
-})
+});
+
+export const registerFormSchema = z.object({
+  firstName: z
+    .string()
+    .min(1, "First name is required."),
+  lastName: z
+    .string()
+    .min(1, "First name is required."),
+  email: z
+    .string()
+    .min(1, "Email is required.")
+    .email("Must be a valid email."),
+  password: passwordSchema,
+  confirmPassword: passwordSchema
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords do not match",
+  path: ["confirmPassword"]
+});

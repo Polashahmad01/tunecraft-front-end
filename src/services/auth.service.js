@@ -47,3 +47,27 @@ export const resetPasswordMutation = async (data) => {
 
   return await response.json();
 }
+
+export const registerMutation = async (data) => {
+  const response = await makeApiRequest("/api/v1/register", {
+    headers: {
+      "Content-type": "application/json"
+    },
+    method: "POST",
+    body: JSON.stringify(data)
+  });
+
+  return await response.json();
+}
+
+export const socialRegisterMutation = async (data) => {
+  const response = await makeApiRequest("/api/v1/register/social", {
+    headers: {
+      "Content-type": "application/json"
+    },
+    method: "POST",
+    body: JSON.stringify(data)
+  });
+
+  return await response.json();
+}
