@@ -18,29 +18,29 @@ export const router = createBrowserRouter([
       {
         index: true,
         element: <HomePage />
+      }
+    ],
+  },
+  {
+    path: "/auth",
+    element: <AuthLayout />,
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        path: "/auth/register",
+        element: <RegisterPage />
       },
       {
-        path: "/auth",
-        element: <AuthLayout />,
-        errorElement: <ErrorPage />,
-        children: [
-          {
-            path: "/auth/register",
-            element: <RegisterPage />
-          },
-          {
-            path: "/auth/login",
-            element: <LoginPage />
-          },
-          {
-            path: "/auth/forgot-password",
-            element: <ForgotPasswordPage />
-          },
-          {
-            path: "/auth/reset-password/:tokenId",
-            element: <ResetPasswordPage />
-          }
-        ]
+        path: "/auth/login",
+        element: <LoginPage />
+      },
+      {
+        path: "/auth/forgot-password",
+        element: <ForgotPasswordPage />
+      },
+      {
+        path: "/auth/reset-password/:tokenId",
+        element: <ResetPasswordPage />
       }
     ]
   },
