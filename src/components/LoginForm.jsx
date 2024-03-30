@@ -6,11 +6,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { useDispatch } from "react-redux";
 
 import { loginFormSchema } from "../utils/formValidationSchema";
 import { loginMutation, socialLoginMutation } from "../services/auth.service";
 import { useNotification } from "../hooks/useNotification";
 import { auth } from "../config/firebaseConfig";
+import { login } from "../store/slice/authSlice";
 
 export default function LoginForm() {
   const [passwordType, setPasswordType] = useState(false);
@@ -27,6 +29,7 @@ export default function LoginForm() {
   const { mutate: socialLoginMutate, data: socialLoginResultData, isPending: socialLoginIsPending } = useMutation({
     mutationFn: socialLoginMutation
   })
+  const dispatch = useDispatch();
 
   const togglePasswordType = () => {
     setPasswordType(passwordType ? false : true);
@@ -38,7 +41,8 @@ export default function LoginForm() {
   
   if(data?.success === true && data?.statusCode === 200 && data?.message === "User successfully logged in.") {
     notifySuccess(data?.message);
-    navigate("/");
+    dispatch(login(data));
+    // navigate("/");
   }
 
   if(data?.success === false && data?.statusCode === 401 && data?.message?.includes("A user with")) {
