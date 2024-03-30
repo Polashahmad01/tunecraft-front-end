@@ -13,6 +13,7 @@ import { loginMutation, socialLoginMutation } from "../services/auth.service";
 import { useNotification } from "../hooks/useNotification";
 import { auth } from "../config/firebaseConfig";
 import { login } from "../store/slice/authSlice";
+import { addDataToLocalStorage } from "../utils/localStorage";
 
 export default function LoginForm() {
   const [passwordType, setPasswordType] = useState(false);
@@ -42,7 +43,8 @@ export default function LoginForm() {
   if(data?.success === true && data?.statusCode === 200 && data?.message === "User successfully logged in.") {
     notifySuccess(data?.message);
     dispatch(login(data));
-    // navigate("/");
+    addDataToLocalStorage("user", { token: data.token, userId: data.data._id });
+    navigate("/");
   }
 
   if(data?.success === false && data?.statusCode === 401 && data?.message?.includes("A user with")) {

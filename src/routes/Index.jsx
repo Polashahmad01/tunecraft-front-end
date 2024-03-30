@@ -1,6 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 
-import RootLayout from "../layouts/RootLayout";
+import ProtectedRoute from "../components/ProtectedRoute";
 import AuthLayout from "../layouts/AuthLayout";
 import ErrorPage from "../views/ErrorPage";
 import HomePage from "../views/HomePage";
@@ -13,7 +13,7 @@ export default function useRouter() {
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <RootLayout />,
+      element: <ProtectedRoute />,
       errorElement: <ErrorPage />,
       children: [
         {
