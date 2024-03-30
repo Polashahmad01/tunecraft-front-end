@@ -1,11 +1,10 @@
 
 export default function HomePage() {
+
   
   return (
-    <section>
-      <h1 className="text-3xl font-bold">
-        Home Page
-      </h1>
+    <section className="bg-gray-50 dark:bg-slate-900">
+      <h1>Home Page</h1>
     </section>
   )
 }
