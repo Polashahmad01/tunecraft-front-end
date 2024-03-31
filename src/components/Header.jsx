@@ -1,5 +1,30 @@
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useMutation } from "@tanstack/react-query";
+
+import { logoutMutation } from "../services/auth.service";
+import { clearDataFromLocalStorage } from "../utils/localStorage";
+import { useNotification } from "../hooks/useNotification";
 
 export default function Header({ open, setOpen, openSidebar, setOpenSidebar }) {
+  const { userId } = useSelector((state) => state.auth);
+  const { notifySuccess, notifyError } = useNotification();
+  const navigate = useNavigate();
+  const { mutate, data, isPending } = useMutation({
+    mutationKey: ["logout-mutate-key"],
+    mutationFn: logoutMutation,
+    onSuccess: (state) => {
+      navigate("/auth/login");
+    },
+    onError: (state) => {
+      console.log("Error", state);
+    }
+  });
+
+  const logoutHandler = () => {
+    mutate({ userId });
+    clearDataFromLocalStorage("user");
+  }
 
   return (
     <header className="sticky top-0 inset-x-0 flex flex-wrap sm:justify-start sm:flex-nowrap z-[48] w-full bg-white border-b text-sm py-2.5 sm:py-4 lg:ps-64 dark:bg-gray-800 dark:border-gray-700">
@@ -31,6 +56,12 @@ export default function Header({ open, setOpen, openSidebar, setOpenSidebar }) {
                     <svg className="flex-shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                     Team Account
                   </a>
+                  <button 
+                    className="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm w-full text-gray-800 hover:bg-gray-100 focus:ring-2 focus:ring-blue-500 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-300"
+                    onClick={logoutHandler}
+                  >
+                    Log Out
+                  </button>
                 </div>
               </div>
             </div>
