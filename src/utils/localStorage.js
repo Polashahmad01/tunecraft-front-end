@@ -8,3 +8,7 @@ export const addDataToLocalStorage = (keyName, data) => {
 export const getDataFromLocalStorage = (keyName) => {
   return JSON.parse(localStorage.getItem(keyName));
 }
+
+export const clearDataFromLocalStorage = (keyName) => {
+  return localStorage.removeItem(keyName);
+}

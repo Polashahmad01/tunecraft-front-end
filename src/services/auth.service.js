@@ -71,3 +71,15 @@ export const socialRegisterMutation = async (data) => {
 
   return await response.json();
 }
+
+export const logoutMutation = async (data) => {
+  const response = await makeApiRequest("/api/v1/logout", {
+    headers: {
+      "Content-type": "application/json"
+    },
+    method: "POST",
+    body: JSON.stringify(data)
+  });
+
+  return await response.json();
+}
