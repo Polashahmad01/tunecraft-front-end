@@ -88,6 +88,8 @@ export default function LoginForm() {
 
   if(socialLoginResultData?.success && socialLoginResultData.statusCode === 200) {
     notifySuccess(socialLoginResultData?.message);
+    addDataToLocalStorage("user", { token: socialLoginResultData?.token, userId: socialLoginResultData?.data?._id })
+    dispatch(login({ token: socialLoginResultData?.token, userId: socialLoginResultData?.data?._id, user: socialLoginResultData?.data }));
     navigate("/");
   }
 
