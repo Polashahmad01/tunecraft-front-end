@@ -7,8 +7,8 @@ import { getDataFromLocalStorage } from "../utils/localStorage";
 export default function ProtectedRoute() {
   const storeUser = useSelector((state) => state.auth);
   const user = getDataFromLocalStorage("user");
-  
-  if(!storeUser?.userId && user === null) {
+
+  if(!storeUser?.userId && (user === null)) {
     return <Navigate to="/auth/login" replace />
   }
 
