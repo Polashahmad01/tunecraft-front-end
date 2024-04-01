@@ -1,10 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useMutation } from "@tanstack/react-query";
+import { useDispatch } from "react-redux";
 
 import { logoutMutation } from "../services/auth.service";
 import { clearDataFromLocalStorage } from "../utils/localStorage";
 import { useNotification } from "../hooks/useNotification";
+import { logOut } from "../store/slice/authSlice";
 
 export default function Header({ open, setOpen, openSidebar, setOpenSidebar }) {
   const { userId } = useSelector((state) => state.auth);
@@ -13,17 +15,16 @@ export default function Header({ open, setOpen, openSidebar, setOpenSidebar }) {
   const { mutate, data, isPending } = useMutation({
     mutationKey: ["logout-mutate-key"],
     mutationFn: logoutMutation,
-    onSuccess: (state) => {
+    onSuccess: () => {
       navigate("/auth/login");
-    },
-    onError: (state) => {
-      console.log("Error", state);
     }
   });
+  const dispatch = useDispatch();
 
   const logoutHandler = () => {
     mutate({ userId });
     clearDataFromLocalStorage("user");
+    dispatch(logOut())
   }
 
   if(data?.success === true && data?.statusCode === 200) {

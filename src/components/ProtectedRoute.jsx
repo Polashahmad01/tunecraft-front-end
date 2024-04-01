@@ -5,10 +5,10 @@ import RootLayout from "../layouts/RootLayout";
 import { getDataFromLocalStorage } from "../utils/localStorage";
 
 export default function ProtectedRoute() {
-  const { userId } = useSelector((state) => state.auth);
+  const storeUser = useSelector((state) => state.auth);
   const user = getDataFromLocalStorage("user");
 
-  if(!userId && !user?.userId) {
+  if(!storeUser?.userId && (user === null)) {
     return <Navigate to="/auth/login" replace />
   }
 

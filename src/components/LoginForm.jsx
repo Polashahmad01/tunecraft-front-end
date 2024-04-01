@@ -40,18 +40,18 @@ export default function LoginForm() {
     mutate(formData);
   }
   
-  if(data?.success === true && data?.statusCode === 200 && data?.message === "User successfully logged in.") {
+  if(data?.success === true && data?.statusCode === 200 && data?.message.includes("User authentication successful")) {
     notifySuccess(data?.message);
-    dispatch(login(data));
+    dispatch(login({ token: data.token, userId: data.data._id, user: data.data }));
     addDataToLocalStorage("user", { token: data.token, userId: data.data._id });
     navigate("/");
   }
 
-  if(data?.success === false && data?.statusCode === 401 && data?.message?.includes("A user with")) {
+  if(data?.success === false && data?.statusCode === 401 && data?.message?.includes("The email")) {
     notifyError(data?.message);
   }
 
-  if(data?.success === false && data?.statusCode === 401 && data?.message?.includes("Wrong password")) {
+  if(data?.success === false && data?.statusCode === 401 && data?.message?.includes("Invalid password entered")) {
     notifyError(data?.message);
   }
 
@@ -88,6 +88,8 @@ export default function LoginForm() {
 
   if(socialLoginResultData?.success && socialLoginResultData.statusCode === 200) {
     notifySuccess(socialLoginResultData?.message);
+    addDataToLocalStorage("user", { token: socialLoginResultData?.token, userId: socialLoginResultData?.data?._id })
+    dispatch(login({ token: socialLoginResultData?.token, userId: socialLoginResultData?.data?._id, user: socialLoginResultData?.data }));
     navigate("/");
   }
 

@@ -6,11 +6,14 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { useDispatch } from "react-redux";
 
 import { registerFormSchema } from "../utils/formValidationSchema";
 import { registerMutation, socialRegisterMutation } from "../services/auth.service";
 import { useNotification } from "../hooks/useNotification";
 import { auth } from "../config/firebaseConfig";
+import { addDataToLocalStorage } from "../utils/localStorage";
+import { login } from "../store/slice/authSlice";
 
 export default function RegisterForm() {
   const [passwordType, setPasswordType] = useState(false);
@@ -29,6 +32,7 @@ export default function RegisterForm() {
   });
   const { notifySuccess, notifyError } = useNotification();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const togglePasswordType = () => {
     setPasswordType(passwordType ? false : true);
@@ -80,6 +84,8 @@ export default function RegisterForm() {
 
   if(socialRegisterResultData?.success === true && (socialRegisterResultData?.statusCode === 201 || socialRegisterResultData?.statusCode === 200)) {
     notifySuccess(socialRegisterResultData?.message);
+    addDataToLocalStorage("user", { token: socialRegisterResultData.token, userId: socialRegisterResultData.data._id })
+    dispatch(login({ token: socialRegisterResultData.token, userId: socialRegisterResultData.data._id, user: socialRegisterResultData.data }));
     navigate("/");
   }
 

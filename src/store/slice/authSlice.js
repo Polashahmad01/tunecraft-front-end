@@ -11,12 +11,14 @@ export const authSlice = createSlice({
   initialState,
   reducers: {
     login: (state, action) => {
-      state.token = action.payload.token;
-      state.userId = action.payload.data._id;
-      state.user = action.payload.data;
+      state.token = action.payload?.token;
+      state.userId = action.payload?.userId;
+      state.user = action.payload?.user;
     },
     logOut: (state) => {
-      console.log("logOut");
+      state.token = null;
+      state.userId = null;
+      state.user = null
     }
   }
 });
